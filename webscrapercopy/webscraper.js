@@ -21,8 +21,8 @@ const crawler = new Crawler({
     } else {
       const $ = cheerio.load(res.body);
 
-      // Extract the medication name from the URL
-      const medicationName = getMedicationNameFromUrl(res.request.uri.href);
+      // Extract the medication name from the 'h1' heading with class 'headinNoMargin'
+      const medicationName = $('h1.headinNoMargin').text().trim();
 
       // Find the 'risks' heading and extract the paragraph that follows
       const risksHeading = $('h2:contains("risks")');
@@ -74,10 +74,3 @@ crawler.on('error', (error) => {
 // Start the crawling process with the initial URL
 crawler.queue(baseUrl);
 console.log(`Crawling started with URL: ${baseUrl}`);
-
-// Function to extract the medication name from the URL
-function getMedicationNameFromUrl(url) {
-  const parts = url.split('/');
-  const medicationName = parts[parts.length - 1].replace(/-/g, ' '); // Replace hyphens with spaces
-  return medicationName;
-}
